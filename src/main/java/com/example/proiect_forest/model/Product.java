@@ -1,7 +1,7 @@
 package com.example.proiect_forest.model;
 
 import jakarta.persistence.*;
-
+import java.io.Serializable;
 import javax.swing.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,16 +13,41 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
     private Long productId;
-
     private String title;
     private String author;
     private String description;
     private BigDecimal price;
     private int stockQuantity;
+    private String sku;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
 
     public Product() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", stockQuantity=" + stockQuantity +
+                ", sku='" + sku + '\'' +
+                ", category=" + category +
+                ", supplier=" + supplier +
+                ", orderItems=" + orderItems +
+                ", StockTransactions=" + StockTransactions +
+                '}';
     }
 
     public Long getProductId() {
@@ -109,15 +134,9 @@ public class Product {
         this.supplier = supplier;
     }
 
-    private String sku;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
+
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;

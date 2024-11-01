@@ -1,4 +1,5 @@
 package com.example.proiect_forest.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import javax.swing.*;
@@ -60,6 +61,7 @@ public class Supplier {
         this.phoneNumber = phoneNumber;
     }
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Product> products;
 
     public List<Product> getProducts() {

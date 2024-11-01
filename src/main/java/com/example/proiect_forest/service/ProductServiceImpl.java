@@ -6,11 +6,13 @@ import com.example.proiect_forest.model.Supplier;
 import com.example.proiect_forest.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Transactional
 @Service
+@SpringBootApplication
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -29,6 +31,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public List<Product> getAllProducts() {
+
         return productRepository.findAll();
     }
     @Transactional
@@ -48,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public void addProduct(Product product, Category category, Supplier supplier) {
+
         product.setCategory(category);
         product.setSupplier(supplier);
 
