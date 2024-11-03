@@ -17,5 +17,5 @@ public interface ProductService {
 
 
     @Transactional
-    void addProduct(Product product, Category category, Supplier supplier);
+    void addProduct(Product product);
 }

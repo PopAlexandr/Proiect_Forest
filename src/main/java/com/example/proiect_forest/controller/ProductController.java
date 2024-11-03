@@ -42,10 +42,11 @@ public class ProductController {
 
     @PostMapping("/add")
     public void addProduct(@RequestBody Product product) {
-        productService.addProduct(product,product.getCategory(),product.getSupplier());
+        System.out.println("pula"+product);
+        productService.addProduct(product);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         return ResponseEntity.ok(productService.updateProduct(id, product));
     }

@@ -1,5 +1,6 @@
 package com.example.proiect_forest.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import javax.swing.*;
@@ -134,6 +135,10 @@ public class Product {
         this.supplier = supplier;
     }
 
+    public void setStockTransactions(List<StockTransaction> stockTransactions) {
+        this.StockTransactions = stockTransactions;
+    }
+
 
 
 
@@ -142,7 +147,8 @@ public class Product {
     private List<OrderItem> orderItems;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StockTransaction> StockTransactions;
+    @JsonManagedReference
+    private List<StockTransaction> StockTransactions=new ArrayList<>();
 
 
     public List<OrderItem> getOrderItems() {

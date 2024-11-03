@@ -62,7 +62,7 @@ public class Supplier {
     }
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<Product> products;
+    private List<Product> products=new ArrayList<>();
 
     public List<Product> getProducts() {
     return products;}
