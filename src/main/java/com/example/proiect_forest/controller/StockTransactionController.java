@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/stocktransactions")
+@RequestMapping("/api/stock")
 public class StockTransactionController {
 
     @Autowired
@@ -25,7 +25,7 @@ public class StockTransactionController {
         return stockTransactionService.getStockTransactionById(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<StockTransaction> getAllStockTransactions() {
         return stockTransactionService.getAllStockTransactions();
     }

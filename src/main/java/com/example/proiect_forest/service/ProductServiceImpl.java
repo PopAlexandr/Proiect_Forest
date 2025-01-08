@@ -2,15 +2,18 @@ package com.example.proiect_forest.service;
 
 import com.example.proiect_forest.model.Category;
 import com.example.proiect_forest.model.Product;
+import com.example.proiect_forest.model.StockTransaction;
 import com.example.proiect_forest.model.Supplier;
 import com.example.proiect_forest.repository.CategoryRepository;
 import com.example.proiect_forest.repository.ProductRepository;
+import com.example.proiect_forest.repository.StockTransactionRepository;
 import com.example.proiect_forest.repository.SupplierRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +26,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
-
+    @Autowired
+    private StockTransactionRepository stockTransactionRepository;
     @Autowired
     private SupplierRepository supplierRepository;
 
@@ -50,17 +54,29 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public Product updateProduct(Long id, Product product) {
+
         if (productRepository.existsById(id)) {
+            int quantityChange= product.getStockQuantity() - productRepository.findById(id).get().getStockQuantity();
             product.setProductId(id);
-            return productRepository.save(product);
+            productRepository.save(product);
+            if (quantityChange != 0) {
+                trackInventoryMovement(product,quantityChange,"EDIT","Stock quantity updated");
+            }
+
         }
-        return null;
+
+        return product;
     }
     @Transactional
-    @Override
     public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
+
+        trackInventoryMovement(product, -product.getStockQuantity(), "DELETE", "Product deleted");
+
         productRepository.deleteById(id);
     }
+
 
     @Override
     @Transactional
@@ -91,5 +107,18 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productRepository.save(product);
+        trackInventoryMovement(product,product.getStockQuantity(),"ADD","New product added");
     }
+    @Transactional
+    public void trackInventoryMovement(Product product, int quantity, String type, String description) {
+        StockTransaction transaction = new StockTransaction();
+        transaction.setProduct(product);
+        transaction.setQuantity(quantity);
+        transaction.setTransactionType(type);
+        transaction.setTransactionDate(LocalDateTime.now());
+
+
+        stockTransactionRepository.save(transaction);
+    }
+
 }

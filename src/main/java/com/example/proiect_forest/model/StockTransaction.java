@@ -1,13 +1,7 @@
 package com.example.proiect_forest.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -71,13 +65,15 @@ public class StockTransaction {
     private Long transactionId;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",nullable = false)
     @JsonBackReference
     private Product product;
-
+    @Column(nullable = true)
     private LocalDateTime transactionDate;
+    @Column(nullable = false)
     private int quantity;
+    @Column(nullable = true)
     private String transactionType;
 
-    // Getters and Setters
+
 }
