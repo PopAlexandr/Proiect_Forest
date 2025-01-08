@@ -46,7 +46,6 @@ public class Product {
                 ", sku='" + sku + '\'' +
                 ", category=" + category +
                 ", supplier=" + supplier +
-                ", orderItems=" + orderItems +
                 ", StockTransactions=" + StockTransactions +
                 '}';
     }
@@ -71,7 +70,7 @@ public class Product {
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.sku = sku;
-        this.orderItems = new ArrayList<>();
+
         this.StockTransactions = new ArrayList<>();
     }
 
@@ -143,17 +142,14 @@ public class Product {
 
 
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> orderItems;
+
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<StockTransaction> StockTransactions=new ArrayList<>();
 
 
-    public List<OrderItem> getOrderItems() {
-    return orderItems;
-    }
+
 
     public List<StockTransaction> getStockTransaction() {
     return StockTransactions;}

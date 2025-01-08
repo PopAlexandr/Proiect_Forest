@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,19 +55,34 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public Product updateProduct(Long id, Product product) {
+        // Fetch the existing product from the database
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
 
-        if (productRepository.existsById(id)) {
-            int quantityChange= product.getStockQuantity() - productRepository.findById(id).get().getStockQuantity();
-            product.setProductId(id);
-            productRepository.save(product);
-            if (quantityChange != 0) {
-                trackInventoryMovement(product,quantityChange,"EDIT","Stock quantity updated");
+        // Update product fields
+        existingProduct.setTitle(product.getTitle());
+        existingProduct.setAuthor(product.getAuthor());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setStockQuantity(product.getStockQuantity());
+        existingProduct.setCategory(product.getCategory());
+        existingProduct.setSupplier(product.getSupplier());
+
+        // Manage StockTransaction updates
+        if (product.getStockTransaction() != null) {
+            // Clear the existing StockTransaction list
+            existingProduct.getStockTransaction().clear();
+
+            // Add updated StockTransaction objects
+            for (StockTransaction transaction : product.getStockTransaction()) {
+                transaction.setProduct(existingProduct);
+                existingProduct.getStockTransaction().add(transaction);
             }
-
         }
 
-        return product;
+        return productRepository.save(existingProduct);
     }
+
     @Transactional
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
@@ -106,19 +122,29 @@ public class ProductServiceImpl implements ProductService {
             product.setSupplier(supplier);
         }
 
-        productRepository.save(product);
-        trackInventoryMovement(product,product.getStockQuantity(),"ADD","New product added");
+        Product savedProduct = productRepository.save(product);
+        trackInventoryMovement(savedProduct,product.getStockQuantity(),"ADD","New product added");
     }
     @Transactional
     public void trackInventoryMovement(Product product, int quantity, String type, String description) {
+
+
         StockTransaction transaction = new StockTransaction();
-        transaction.setProduct(product);
+        transaction.setProduct(product); // Use the retrieved product
         transaction.setQuantity(quantity);
         transaction.setTransactionType(type);
         transaction.setTransactionDate(LocalDateTime.now());
 
 
         stockTransactionRepository.save(transaction);
+        // Ensure no duplicate references in the product's stock transactions list
+        if (product.getStockTransaction() == null) {
+            product.setStockTransactions(new ArrayList<>());
+        }
+        product.getStockTransaction().add(transaction);
+
+        productRepository.save(product); // Persist the updated product
     }
+
 
 }
