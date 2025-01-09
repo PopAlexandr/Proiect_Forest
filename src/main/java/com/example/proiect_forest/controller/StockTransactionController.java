@@ -4,6 +4,8 @@ import com.example.proiect_forest.model.Product;
 import com.example.proiect_forest.model.StockTransaction;
 import com.example.proiect_forest.service.StockTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class StockTransactionController {
     }
 
     @GetMapping("/all")
-    public List<StockTransaction> getAllStockTransactions() {
-        return stockTransactionService.getAllStockTransactions();
+    public ResponseEntity<List<StockTransaction>> getAllStockTransactions() {
+        List<StockTransaction> transactions = stockTransactionService.getAllStockTransactions();
+        return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
