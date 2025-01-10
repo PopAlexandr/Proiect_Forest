@@ -1,5 +1,6 @@
 package com.example.proiect_forest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.io.Serializable;
@@ -46,7 +47,6 @@ public class Product {
                 ", sku='" + sku + '\'' +
                 ", category=" + category +
                 ", supplier=" + supplier +
-                ", StockTransactions=" + StockTransactions +
                 '}';
     }
 
@@ -71,7 +71,7 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.sku = sku;
 
-        this.StockTransactions = new ArrayList<>();
+        this.stockTransactions = new ArrayList<>();
     }
 
     public void setTitle(String title) {
@@ -135,7 +135,7 @@ public class Product {
     }
 
     public void setStockTransactions(List<StockTransaction> stockTransactions) {
-        this.StockTransactions = stockTransactions;
+        this.stockTransactions = stockTransactions;
     }
 
 
@@ -145,12 +145,12 @@ public class Product {
 
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<StockTransaction> StockTransactions=new ArrayList<>();
+    @JsonIgnore
+    private List<StockTransaction> stockTransactions=new ArrayList<>();
 
 
 
 
     public List<StockTransaction> getStockTransaction() {
-    return StockTransactions;}
+    return stockTransactions;}
 }

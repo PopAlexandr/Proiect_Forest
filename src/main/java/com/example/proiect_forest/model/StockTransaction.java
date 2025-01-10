@@ -64,10 +64,11 @@ public class StockTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id",nullable = false)
+    @ManyToOne(fetch =FetchType.EAGER)
+    @JoinColumn(name = "product_id")
     @JsonBackReference
     private Product product;
+
     @Column(nullable = true)
     private LocalDateTime transactionDate;
     @Column(nullable = false)
@@ -75,5 +76,14 @@ public class StockTransaction {
     @Column(nullable = true)
     private String transactionType;
 
-
+    @Override
+    public String toString() {
+        return "StockTransaction{" +
+                "transactionId=" + transactionId +
+                ", product=" + product +
+                ", transactionDate=" + transactionDate +
+                ", quantity=" + quantity +
+                ", transactionType='" + transactionType + '\'' +
+                '}';
+    }
 }
