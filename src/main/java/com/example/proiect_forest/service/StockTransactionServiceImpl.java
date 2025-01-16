@@ -18,7 +18,7 @@ public class StockTransactionServiceImpl implements StockTransactionService {
     @Override
     public void saveStockTransaction(StockTransaction stockTransaction, Product product) {
         stockTransaction.setProduct(product);
-
+        stockTransaction.setProductTitle(product.getTitle());
         product.getStockTransaction().add(stockTransaction);
 
 

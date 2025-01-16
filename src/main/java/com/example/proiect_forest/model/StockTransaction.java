@@ -64,6 +64,17 @@ public class StockTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
 
+    @Column(nullable = true)
+    private String productTitle;
+
+    public String getProductTitle() {
+        return productTitle;
+    }
+
+    public void setProductTitle(String productTitle) {
+        this.productTitle = productTitle;
+    }
+
     @ManyToOne(fetch =FetchType.EAGER)
     @JoinColumn(name = "product_id")
     @JsonBackReference
