@@ -18,4 +18,8 @@ public interface ProductService {
 
     @Transactional
     void addProduct(Product product);
+
+    List<Product> getLowStockProducts(int threshold);
+
+    List<Product> getTopSellingProducts(int limit);
 }

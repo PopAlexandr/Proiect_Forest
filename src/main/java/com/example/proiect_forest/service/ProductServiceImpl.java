@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -138,6 +139,38 @@ public class ProductServiceImpl implements ProductService {
         Product savedProduct = productRepository.save(product);
         trackInventoryMovement(savedProduct,product.getStockQuantity(),"ADD","New product added");
     }
+
+    @Override
+    public List<Product> getLowStockProducts(int threshold) {
+        return productRepository.findAll()
+                .stream()
+                .filter(product -> product.getStockQuantity() < threshold)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Product> getTopSellingProducts(int limit) {
+        // Calculate total sales for each product
+        return productRepository.findAll().stream()
+                .sorted((p1, p2) -> {
+                    int sales1 = p1.getStockTransaction().stream()
+                            .filter(tx -> "REMOVE".equalsIgnoreCase(tx.getTransactionType()))
+                            .mapToInt(StockTransaction::getQuantity)
+                            .sum();
+
+                    int sales2 = p2.getStockTransaction().stream()
+                            .filter(tx -> "REMOVE".equalsIgnoreCase(tx.getTransactionType()))
+                            .mapToInt(StockTransaction::getQuantity)
+                            .sum();
+
+                    return Integer.compare(sales2, sales1); // Sort by descending sales
+                })
+                .limit(limit) // Limit the number of top-selling products
+                .collect(Collectors.toList());
+    }
+
+
+
     @Transactional
     public void trackInventoryMovement(Product product, int quantity, String type, String description) {
 

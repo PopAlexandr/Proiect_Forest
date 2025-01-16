@@ -46,6 +46,18 @@ public class ProductController {
         productService.addProduct(product);
     }
 
+    @GetMapping("/low-stock")
+    public ResponseEntity<List<Product>> getLowStockProducts(@RequestParam int threshold) {
+        List<Product> lowStockProducts = productService.getLowStockProducts(threshold);
+        return new ResponseEntity<>(lowStockProducts, HttpStatus.OK);
+    }
+    @GetMapping("/top-selling")
+    public ResponseEntity<List<Product>> getTopSellingProducts(@RequestParam int limit) {
+        List<Product> topSellingProducts = productService.getTopSellingProducts(limit);
+        return new ResponseEntity<>(topSellingProducts, HttpStatus.OK);
+    }
+
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         System.out.println("Incoming product update request: " + product);
