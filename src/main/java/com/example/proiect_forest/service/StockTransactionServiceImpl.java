@@ -7,7 +7,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Transactional
 @Service
 public class StockTransactionServiceImpl implements StockTransactionService {
@@ -51,5 +54,28 @@ public class StockTransactionServiceImpl implements StockTransactionService {
     @Override
     public void deleteStockTransaction(Long id) {
         stockTransactionRepository.deleteById(id);
+    }
+
+    @Override
+    public Map<String, Integer> getTransactionSummary() {
+        List<StockTransaction> transactions = stockTransactionRepository.findAll();
+        Map<String, Integer> summary = new HashMap<>();
+
+        summary.put("ADD", transactions.stream()
+                .filter(t -> "ADD".equals(t.getTransactionType()))
+                .mapToInt(StockTransaction::getQuantity)
+                .sum());
+
+        summary.put("REMOVE", transactions.stream()
+                .filter(t -> "REMOVE".equals(t.getTransactionType()))
+                .mapToInt(StockTransaction::getQuantity)
+                .sum());
+
+        summary.put("DELETE", transactions.stream()
+                .filter(t -> "DELETE".equals(t.getTransactionType()))
+                .mapToInt(StockTransaction::getQuantity)
+                .sum());
+
+        return summary;
     }
 }

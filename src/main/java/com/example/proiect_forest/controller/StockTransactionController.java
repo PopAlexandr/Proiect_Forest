@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/stock")
@@ -25,6 +26,11 @@ public class StockTransactionController {
     @GetMapping("/{id}")
     public StockTransaction getStockTransactionById(@PathVariable Long id) {
         return stockTransactionService.getStockTransactionById(id);
+    }
+    @GetMapping("/summary")
+    public ResponseEntity<Map<String, Integer>> getTransactionSummary() {
+        Map<String, Integer> summary = stockTransactionService.getTransactionSummary();
+        return new ResponseEntity<>(summary, HttpStatus.OK);
     }
 
     @GetMapping("/all")
