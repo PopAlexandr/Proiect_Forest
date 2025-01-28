@@ -74,9 +74,10 @@ public class StockTransaction {
     public void setProductTitle(String productTitle) {
         this.productTitle = productTitle;
     }
-
+    //produsu isi da load direct cum da load transactia
     @ManyToOne(fetch =FetchType.EAGER)
     @JoinColumn(name = "product_id")
+    //pt infinite recursion
     @JsonBackReference
     private Product product;
 

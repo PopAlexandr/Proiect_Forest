@@ -41,7 +41,9 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    //infinite recursion avoid
     @JsonIgnore
     private List<Product> products=new ArrayList<>();
 

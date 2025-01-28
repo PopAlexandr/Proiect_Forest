@@ -139,16 +139,11 @@ public class Product {
     }
 
 
-
-
-
-
-
+    //cand un produs e salvat, da persist si la transactie, cand un produs e salvat si la transactie da merge + nu se sterg transactiile cand dam delete la produs
     @OneToMany(mappedBy = "product",cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    //pt infinite recursion
     @JsonIgnore
     private List<StockTransaction> stockTransactions=new ArrayList<>();
-
-
 
 
     public List<StockTransaction> getStockTransaction() {

@@ -2,7 +2,6 @@ package com.example.proiect_forest.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
